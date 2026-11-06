@@ -1,0 +1,6 @@
+(executable
+ (public_name a4)
+ (name main)
+ (modes js)
+ (libraries a4 js_of_ocaml js_of_ocaml-lwt lwt)
+ (preprocess (pps js_of_ocaml-ppx lwt_ppx)))
