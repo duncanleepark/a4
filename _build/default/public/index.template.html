@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flip Side</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="main.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Flip<span>/</span>Side</h1>
+      </header>
+      <section class="deck-picker" aria-label="Load a deck">
+        <label for="deck-file">Choose a CSV deck</label>
+        <input id="deck-file" type="file" accept=".csv,text/csv" autocomplete="off" disabled>
+        <p id="deck-name">(no deck selected)</p>
+      </section>
+      <p id="status" role="status">Choose a deck to begin.</p>
+      <section class="card" aria-label="Flashcard" aria-live="polite">
+        <p id="card-side" class="eyebrow">Question</p>
+        <p id="card-text">Your next discovery starts here.</p>
+      </section>
+      <nav class="actions" aria-label="Study controls">
+        <button id="flip" type="button" autocomplete="off" disabled>Flip</button>
+        <button id="next" type="button" autocomplete="off" disabled>Next</button>
+        <button id="restart" type="button" autocomplete="off" disabled>Restart</button>
+      </nav>
+      <footer>A CS 3110 assignment coded by Duncan Park.</footer>
+    </main>
+  </body>
+</html>

@@ -17,6 +17,7 @@
 
 (package
  (name a4)
+ (allow_empty)
  (synopsis "A short synopsis")
  (description "A longer description")
  (depends ocaml)

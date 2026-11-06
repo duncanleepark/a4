@@ -1,0 +1,4 @@
+(lang dune 3.24)
+(name a4)
+(sections (lib .))
+(files (lib (META dune-package opam)))
