@@ -7,12 +7,38 @@ type side = Question | Answer
 (** The current card is the head of [remaining], when it is nonempty. *)
 type t = { remaining : card list; finished : card list; side : side }
 
-(** [init cards] starts a round with [cards] in the given order.
-    @raise Invalid_argument if [cards] is empty. *)
-let init cards =
-  match cards with
-  | [] -> invalid_arg "Study.init: empty deck"
-  | _ -> { remaining = cards; finished = []; side = Question }
+(** [init csv] starts a round from headerless CSV with a question and answer
+    on each row. *)
+let init csv =
+  let rows = Csv.input_all (Csv.of_string csv) in
+  let remaining =
+    List.map
+      (function
+        | [ question; answer ] -> { question; answer }
+        | _ -> invalid_arg "Study.init: expected two columns per card")
+      rows
+  in
+  { remaining; finished = []; side = Question }
+
+(** [num_remaining state] counts cards left to study, including the current card. *)
+let num_remaining state = List.length state.remaining
+
+(** [num_finished state] counts cards already studied. *)
+let num_finished state = List.length state.finished
+
+(** [text state] is the text shown on the current card, or a completion message. *)
+let text state =
+  match state.remaining, state.side with
+  | [], _ -> "Congrats!"
+  | card :: _, Question -> card.question
+  | card :: _, Answer -> card.answer
+
+(** [label state] identifies the current side, or indicates completion. *)
+let label state =
+  match state.remaining, state.side with
+  | [], _ -> "Complete"
+  | _, Question -> "Question"
+  | _, Answer -> "Answer"
 
 (** [flip state] switches the side of the current card.
     @raise Invalid_argument if the round is complete. *)
@@ -36,11 +62,5 @@ let () = Random.self_init ()
 
 (** [restart state] restores and shuffles all cards for a new round. *)
 let restart state =
-  let cards = Array.of_list (state.remaining @ state.finished) in
-  for i = Array.length cards - 1 downto 1 do
-    let j = Random.int (i + 1) in
-    let card = cards.(i) in
-    cards.(i) <- cards.(j);
-    cards.(j) <- card
-  done;
-  { remaining = Array.to_list cards; finished = []; side = Question }
+  let cards = BatList.shuffle (state.remaining @ state.finished) in
+  { remaining = cards; finished = []; side = Question }
